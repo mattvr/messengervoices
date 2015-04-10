@@ -1,0 +1,23 @@
+{
+  "description": "Gives Facebook Messenger a voice.",
+  "minimum_chrome_version": "14",
+  "name": "Messenger Voices",
+  "permissions": [ "tts", "webRequest", "webRequestBlocking", "*://*.messenger.com/" ],
+
+  "content_scripts": [
+    {
+      "js": ["voices.js"],
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_end"
+    }
+  ],
+  "background": 
+  {
+      "presistent": true,
+      "scripts": [
+        "background.js"
+      ]
+  },
+  "version": "2.1",
+  "manifest_version": 2
+}
