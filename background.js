@@ -122,7 +122,7 @@ function checkResponses() {
 	    	}
 	    } // otherwise still waiting on response, hang on
 	    else if (res["open"] == false) {
-	    	res["keepalive"];
+	    	res["keepalive"]--;
  	    }
 
 	    // check if we need to kill this request
