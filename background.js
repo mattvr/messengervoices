@@ -1,9 +1,9 @@
 var outRe = /\[author\]=fbid%3A(\d+).*\[body\]=(.*?)&message_batch/; // regex against outgoing message POST data
-var inRe = /\"author_fbid\":(\d+).*?\"message\":\"(.*?)\","time".*?uuid\"\:\"([\w\d.:]+?)\",/g; // regex against incoming message json data
-var inRe2= /\"author_fbid\":(\d+).*?\"message\":\"(.*?)\","time".*?uuid\"\:\"([\w\d.:]+?)\"/;
+var inRe = /fbid:(\d+).*?\"mid\.(\d+:\w+)\".*?\"body\":\"(.*?)\",/g; // regex against incoming message json data
+var inRe2= /fbid:(\d+).*?\"mid\.(\d+:\w+)\".*?\"body\":\"(.*?)\",/;
 
 var pollInterval = 1000; // how frequently to check for new incoming messages
-var keepaliveTime = 1 * (1000 / pollInterval); // how long to keepalive json streams
+var keepaliveTime = 10 * (1000 / pollInterval); // how long to keepalive json streams
 
 // State
 var selfPitch = -1;
@@ -32,7 +32,7 @@ function handleRequest(req) {
 				return {cancel: true};
 			}
 			else { // Normal message
-				// speak(true, author, message);
+				speak(true, author, message);
 				return {cancel: false};
 			}
 		}
@@ -122,7 +122,7 @@ function checkResponses() {
 	    	}
 	    } // otherwise still waiting on response, hang on
 	    else if (res["open"] == false) {
-	    	res["keepalive"]--;
+	    	res["keepalive"];
  	    }
 
 	    // check if we need to kill this request
@@ -137,7 +137,9 @@ function checkResponses() {
 // Parses JSON stream data
 function parseResponse(res, text) {
 	var result = text.match(inRe);
-	if (result == null) return;
+	if (result == null) {
+		return;
+	}
 
 	// Print new messages
 	for (var i = 0; i < result.length; i++) {
@@ -147,10 +149,10 @@ function parseResponse(res, text) {
 		}
 		else {
 			var author = obj[1];
-			var message = obj[2];
-			var uuid = obj[3];
+			var uuid = obj[2];
+			var message = obj[3];
 
-			// if (author == selfID) continue;
+			if (author == selfID) continue;
 			if (recents.indexOf(uuid) == -1) {
 				console.log("(incoming) " + author + ": " + message); 
 				speak(false, author, message); 
