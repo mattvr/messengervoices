@@ -198,7 +198,8 @@ function parseCommand(message) {
 function speak(self, author, message) {
 	// generate pitch from 0.5 -> 1.5
 	var pitch = 1 + (prng(author) - 0.5);
-	var gender = prng(author + 13) > 0.5 ? "male" : "female"
+	// var gender = prng(author + 13) > 0.5 ? "male" : "female"
+	var gender = "male";
 
 	// If not set, initialize own voice
 	if (self && selfPitch == -1)
